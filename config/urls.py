@@ -20,9 +20,12 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
+    # file_versions api
+    path("api/file_versions/", include("file_versions.urls")),
 ]
 
 if settings.DEBUG:
+    urlpatterns = [path(settings.ADMIN_URL, admin.site.urls)] + urlpatterns
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
