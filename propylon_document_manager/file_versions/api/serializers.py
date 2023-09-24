@@ -1,5 +1,4 @@
-from urllib.parse import (quote_plus,
-                          unquote_plus)
+from urllib.parse import (quote_plus, unquote)
 
 from file_versions.models import FileVersion
 from rest_framework import serializers
@@ -12,7 +11,7 @@ class FileVersionSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["file_name"] = unquote_plus(representation["file_name"])
+        representation["file_name"] = unquote(representation["file_name"])
         return representation
 
 
@@ -26,7 +25,7 @@ class ListFileVersionSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["file_name"] = unquote_plus(representation["file_name"])
+        representation["file_name"] = unquote(representation["file_name"])
         return representation
 
     def get_fields_names(self, declared_fields, info):

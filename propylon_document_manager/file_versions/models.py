@@ -15,7 +15,7 @@ class FileVersion(models.Model):
     file_type = models.CharField(max_length=100, blank=True, null=True)
     file_size = models.IntegerField(blank=True, null=True)
     file_hash = models.CharField(max_length=100, blank=True, null=True)
-    parent_file = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
+    parent_file = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, default=None)
     is_deleted = models.BooleanField(default=False)
 
     class Meta:
