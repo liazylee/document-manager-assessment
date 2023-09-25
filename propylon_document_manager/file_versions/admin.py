@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from file_versions import models
+from propylon_document_manager.file_versions import models
 
 
 # Register your models here.

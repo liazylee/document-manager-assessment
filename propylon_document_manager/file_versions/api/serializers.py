@@ -1,13 +1,14 @@
-from urllib.parse import (quote_plus, unquote)
+from urllib.parse import (unquote)
 
-from file_versions.models import FileVersion
 from rest_framework import serializers
+
+from propylon_document_manager.file_versions.models import FileVersion
 
 
 class FileVersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileVersion
-        fields = "__all__"
+        exclude = ['is_deleted', 'parent_file', ]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -20,8 +21,8 @@ class ListFileVersionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FileVersion
-        fields = "__all__"
         extra_fields = ["child_file", ]
+        exclude = ['is_deleted', 'parent_file', ]
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -29,7 +30,7 @@ class ListFileVersionSerializer(serializers.ModelSerializer):
         return representation
 
     def get_fields_names(self, declared_fields, info):
-        expanded_fields = super().get_fields_names(declared_fields, info)
+        expanded_fields = super().get_fields_names(declared_fields, info)  # type: ignore
         if getattr(self.Meta, "extra_fields", None):
             return expanded_fields + self.Meta.extra_fields
         else:
@@ -44,17 +45,21 @@ class ListFileVersionSerializer(serializers.ModelSerializer):
 
 
 class CreateFileVersionSerializer(serializers.ModelSerializer):
+    file_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = FileVersion
-        fields = "__all__"
+        exclude = ['is_deleted', 'parent_file', ]
 
     def create(self, validated_data):
-        if validated_data["file_user"] != self.context["request"].user:
-            raise serializers.ValidationError("You can't upload file for other users")
-        validated_data["file_name"] = validated_data["url_file"].name
-        validated_data["file_name"] = quote_plus(validated_data["file_name"])
-        if (version_numer := FileVersion.objects.filter(file_name=
-                                                        validated_data["file_name"])):
+        url_file = validated_data["url_file"]
+        if not validated_data.get("file_name"):
+            validated_data["file_name"] = url_file.name
+        validated_data['file_type'], validated_data['file_size'], \
+            validated_data['file_hash'] = url_file.content_type, url_file.size, \
+            abs(hash(validated_data['file_name'])) % (10 ** 8)
+        version_numer = FileVersion.objects.filter(file_name=validated_data["file_name"],
+                                                   file_user=validated_data["file_user"])
+        if version_numer:
             validated_data["version_number"] = version_numer.first().version_number + 1
             validated_data["parent_file"] = version_numer.last()
         return super().create(validated_data)

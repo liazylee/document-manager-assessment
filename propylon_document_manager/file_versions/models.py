@@ -3,11 +3,11 @@ from django.db import models
 
 # url_file stores in  each user's folder each file's name and version number
 def custom_dirction(instance, filename):
-    return f"/{instance.file_user}/{instance.file_name}/{instance.version_number}/"
+    return f"upload/{instance.file_user.pk}/{instance.file_hash}/{instance.version_number}/{filename}"
 
 
 class FileVersion(models.Model):
-    file_name = models.fields.CharField(max_length=512, db_index=True, blank=True, null=True)
+    file_name = models.fields.CharField(max_length=512, blank=True, null=True)
     version_number = models.fields.IntegerField(default=1)
     url_file = models.FileField(upload_to=custom_dirction, )
     file_user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True, blank=True)
@@ -19,7 +19,7 @@ class FileVersion(models.Model):
     is_deleted = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ['file_name', 'version_number', 'file_user']
+        # unique_together = ['file_name', 'version_number', 'file_user']
         ordering = ['-version_number', ]
 
     def __str__(self):
