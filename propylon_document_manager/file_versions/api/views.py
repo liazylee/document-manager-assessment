@@ -1,5 +1,6 @@
 from django.db.models import QuerySet
 from django.http import HttpResponse
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.generics import get_object_or_404
@@ -62,6 +63,17 @@ class FileVersionViewSet(CreateModelMixin, RetrieveModelMixin, ListModelMixin, G
     #         return response
 
 
+@extend_schema(
+    description='Paths for download file.\nExample: api/file_versions/download_by_version/test.pdf\nExample with version: api/file_versions/download_by_version/test.pdf?revision=2',
+    responses={
+        200: OpenApiResponse(
+            description='File download',
+        ),
+        401: OpenApiResponse(
+            description='Authentication credentials were not provided.',
+        ),
+        404: OpenApiResponse(description="not find."),
+    })
 @api_view(["GET"])
 @permission_classes([IsAuthenticated, OwnFilePermission])
 @authentication_classes([TokenAuthentication, ])

@@ -29,7 +29,7 @@ class TestFileVersionViewSet:
 
     @pytest.mark.django_db
     def test_upload_file(self):
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/",
                                             data={"url_file": file, })
             assert response.status_code == 201
@@ -39,11 +39,11 @@ class TestFileVersionViewSet:
     # test upload file with same name
     @pytest.mark.django_db
     def test_upload_file_with_same_name(self):
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/",
                                             data={"url_file": file, })
             assert response.status_code == 201
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/",
                                             data={"url_file": file, })
             assert response.status_code == 201
@@ -52,7 +52,7 @@ class TestFileVersionViewSet:
 
     @pytest.mark.django_db
     def test_download_file(self):
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/", data={"url_file": file,
                                                                          })
             assert response.status_code == 201
@@ -71,11 +71,11 @@ class TestFileVersionViewSet:
 
     @pytest.mark.django_db
     def test_download_file_with_version(self):
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/",
                                             data={"url_file": file, 'file_name': 'Full Stack Engineer Test.pdf'})
             assert response.status_code == 201
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/",
                                             data={"url_file": file, 'file_name': 'Full Stack Engineer Test.pdf'})
             assert response.status_code == 201
@@ -85,7 +85,7 @@ class TestFileVersionViewSet:
 
     @pytest.mark.django_db
     def test_download_file_with_version_not_found(self):
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/", data={"url_file": file})
             assert response.status_code == 201
         response = self.api_client.get(
@@ -99,13 +99,13 @@ class TestFileVersionViewSet:
 
     @pytest.mark.django_db
     def test_unauthorized_user_upload_file(self):
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.unauthenticated_client.post("/api/file_versions/", data={"url_file": file})
             assert response.status_code == 401
 
     @pytest.mark.django_db
     def test_unauthorized_user_download_file(self):
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/", data={"url_file": file})
             assert response.status_code == 201
         response = self.unauthenticated_client.get(
@@ -114,7 +114,7 @@ class TestFileVersionViewSet:
 
     @pytest.mark.django_db
     def test_unauthorized_user_download_file_with_version(self):
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/", data={"url_file": file})
             assert response.status_code == 201
         response = self.unauthenticated_client.get(
@@ -123,10 +123,10 @@ class TestFileVersionViewSet:
 
     @pytest.mark.django_db
     def test_file_version_with_data(self):
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/", data={"url_file": file})
             assert response.status_code == 201
-        with open("../../../docs/Full Stack Engineer Test.pdf", "rb") as file:
+        with open("Full Stack Engineer Test.pdf", "rb") as file:
             response = self.api_client.post("/api/file_versions/", data={"url_file": file})
             assert response.status_code == 201
         response = self.api_client.get("/api/file_versions/")
