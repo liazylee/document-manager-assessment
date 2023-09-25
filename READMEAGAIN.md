@@ -141,7 +141,12 @@ the json data is order by the file_name. user can use file_name as category to f
 
 ### UI for viewing differences in content between file versions.
 
-user can select two versions of file and open it in the browser to compare the difference.
+there are two options for user to compare the difference between two versions of file.
+
+* user can select two versions of file and open it in the browser to compare the difference.
+* if we can generate the diff file(like text,pdf...), we can use the diff file to show the difference between two
+  versions of file.
+
 
 
 
